@@ -22,10 +22,10 @@ const (
 	keylightPort = "9123"
 
 	// Prometheus metric names.
-	klInfo                   = "keylight_info"
-	klLightOn                = "keylight_light_on"
-	klLightBrightnessPercent = "keylight_light_brightness_percent"
-	klLightTemperatureKelvin = "keylight_light_temperature_kelvin"
+	klInfo                        = "keylight_info"
+	klLightOn                     = "keylight_light_on"
+	klLightBrightnessPercent      = "keylight_light_brightness_percent"
+	klLightColorTemperatureKelvin = "keylight_light_color_temperature_kelvin"
 )
 
 var _ http.Handler = &handler{}
@@ -76,7 +76,10 @@ func NewHandler(reg *prometheus.Registry, f Fetcher) http.Handler {
 	)
 
 	mm.ConstGauge(
-		klLightTemperatureKelvin,
+		// Explicitly note "color temperature" to avoid possible confusion with
+		// the physical temperature of the device, which does not seem to be
+		// exposed by the API.
+		klLightColorTemperatureKelvin,
 		"The color temperature in Kelvin of a given light on a device.",
 		labels...,
 	)
@@ -223,7 +226,7 @@ func scrapeDevice(d *Data) metricslite.ScrapeFunc {
 			switch name {
 			case klInfo:
 				c(1.0, d.Device.FirmwareVersion, d.Device.DisplayName, serial)
-			case klLightOn, klLightBrightnessPercent, klLightTemperatureKelvin:
+			case klLightOn, klLightBrightnessPercent, klLightColorTemperatureKelvin:
 				for i, l := range d.Lights {
 					light := fmt.Sprintf("light%d", i)
 
@@ -232,7 +235,7 @@ func scrapeDevice(d *Data) metricslite.ScrapeFunc {
 						c(boolFloat(l.On), light, serial)
 					case klLightBrightnessPercent:
 						c(float64(l.Brightness), light, serial)
-					case klLightTemperatureKelvin:
+					case klLightColorTemperatureKelvin:
 						c(float64(l.Temperature), light, serial)
 					default:
 						panicf("keylight_exporter: unhandled light metric %q", name)

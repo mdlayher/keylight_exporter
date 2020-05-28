@@ -142,10 +142,10 @@ func TestHandler(t *testing.T) {
 				`keylight_info{firmware="1.0.0",name="test",serial="1111"} 1`,
 				`keylight_light_on{light="light0",serial="1111"} 1`,
 				`keylight_light_brightness_percent{light="light0",serial="1111"} 20`,
-				`keylight_light_temperature_kelvin{light="light0",serial="1111"} 4200`,
+				`keylight_light_color_temperature_kelvin{light="light0",serial="1111"} 4200`,
 				`keylight_light_on{light="light1",serial="1111"} 0`,
 				`keylight_light_brightness_percent{light="light1",serial="1111"} 0`,
-				`keylight_light_temperature_kelvin{light="light1",serial="1111"} 0`,
+				`keylight_light_color_temperature_kelvin{light="light1",serial="1111"} 0`,
 			}
 
 			if !promtest.Match(t, b, match) {

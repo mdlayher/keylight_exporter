@@ -130,13 +130,9 @@ func TestHandler(t *testing.T) {
 				t.Fatalf("failed to read HTTP body: %v", err)
 			}
 
-			// TODO(mdlayher): re-enable when Kelvin is allowed as a metric unit.
-			// https://github.com/prometheus/client_golang/pull/761
-			/*
-				if !promtest.Lint(t, b) {
-					t.Fatal("failed to lint Prometheus metrics")
-				}
-			*/
+			if !promtest.Lint(t, b) {
+				t.Fatal("failed to lint Prometheus metrics")
+			}
 
 			match := []string{
 				`keylight_info{firmware="1.0.0",name="test",serial="1111"} 1`,

@@ -9,6 +9,7 @@ import (
 
 	keylightexporter "github.com/mdlayher/keylight_exporter"
 	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/collectors"
 )
 
 func main() {
@@ -21,8 +22,8 @@ func main() {
 
 	reg := prometheus.NewPedanticRegistry()
 	reg.MustRegister(
-		prometheus.NewGoCollector(),
-		prometheus.NewProcessCollector(prometheus.ProcessCollectorOpts{}),
+		collectors.NewGoCollector(),
+		collectors.NewProcessCollector(collectors.ProcessCollectorOpts{}),
 	)
 
 	mux := http.NewServeMux()

@@ -3,7 +3,7 @@ package keylightexporter_test
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -125,7 +125,7 @@ func TestHandler(t *testing.T) {
 				return
 			}
 
-			b, err := ioutil.ReadAll(res.Body)
+			b, err := io.ReadAll(res.Body)
 			if err != nil {
 				t.Fatalf("failed to read HTTP body: %v", err)
 			}
